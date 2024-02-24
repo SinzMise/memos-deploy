@@ -27,12 +27,12 @@ jobs:
           ln -s /usr/local/bin/go121 /usr/local/bin/go
         run: |
           export LATEST_APP=v0.18.2
-          git clone -b $LATEST_APP https://github.com/usememos/memos.git
-          cd memos/web
+          git clone https://github.com/usememos/memos.git
+          cd memos/web && git checkout $LATEST_APP
           yarn && yarn build
           cd ..
           rm -rf ./server/dist && cp -r web/dist ./server/
-          go build -o Memos-FreeBSD ./main.go
+          go build -o Memos-FreeBSD
           cd ..
           
     - name: Upload artifact
