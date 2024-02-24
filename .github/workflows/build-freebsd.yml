@@ -9,6 +9,7 @@ on:
       dry_run:
         required: true
         type: boolean
+  workflow_dispatch:
 
 jobs:
   test:
