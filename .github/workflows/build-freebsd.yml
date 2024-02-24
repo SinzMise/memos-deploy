@@ -32,7 +32,7 @@ jobs:
           pnpm install && pnpm build
           cd ..
           rm -rf ./server/dist && cp -r web/dist ./server/
-          go build -o Memos-FreeBSD
+          go build -o memos-freebsd
           cd ..
           
     - name: Upload artifact
@@ -40,7 +40,7 @@ jobs:
       with:
         name: Memos-FreeBSD
         path: |
-            memos/Memos-FreeBSD
+            memos/memos-freebsd
 
     - name: Generate release tag
       id: tag
@@ -53,7 +53,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         files: |
-              memos/Memos-FreeBSD
+              memos/memos-freebsd
               
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
