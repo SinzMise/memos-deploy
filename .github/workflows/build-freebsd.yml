@@ -1,0 +1,63 @@
+name: Build Memos-FreeBSD
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      dry_run:
+        required: true
+        type: boolean
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Build Memos-FreeBSD
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build Memos-FreeBSD
+      uses: vmactions/freebsd-vm@v1
+      with:
+        usesh: true
+        release: 13.2
+        prepare: |
+          pkg install -y node wget curl git go121 gcc bash gawk gsed yarn
+          ln -s /usr/local/bin/go121 /usr/local/bin/go
+        run: |
+          export LATEST_APP=v0.18.2
+          git clone -b $LATEST_APP https://github.com/usememos/memos.git
+          cd memos/web
+          yarn && yarn build
+          cd ..
+          rm -rf ./server/dist && cp -r web/dist ./server/
+          go build -o Memos-FreeBSD ./main.go
+          cd ..
+          
+    - name: Upload artifact
+      uses: actions/upload-artifact@main
+      with:
+        name: Memos-FreeBSD
+        path: |
+            memos/Memos-FreeBSD
+
+    - name: Generate release tag
+      id: tag
+      run: echo "release_tag=v0.18.2" >> $GITHUB_OUTPUT
+
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        files: |
+              memos/Memos-FreeBSD
+              
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository: 'SinzMise/memos-deploy'
+        retain_days: 1
+        keep_minimum_runs: 8
