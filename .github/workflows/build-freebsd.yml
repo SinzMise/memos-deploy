@@ -17,13 +17,26 @@ jobs:
     name: Build Memos-FreeBSD
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Use pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        registry-url: https://registry.npmjs.org/
+        cache: 'pnpm'
+  
     - name: Build Memos-FreeBSD
       uses: vmactions/freebsd-vm@v1
       with:
         usesh: true
         release: 13.2
         prepare: |
-          pkg install -y node wget curl git go121 gcc bash gawk gsed pnpm
+          pkg install -y node wget curl git go121 gcc bash gawk gsed
           ln -s /usr/local/bin/go121 /usr/local/bin/go
         run: |
           export LATEST_APP=v0.18.2
