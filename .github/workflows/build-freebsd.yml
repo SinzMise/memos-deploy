@@ -29,7 +29,7 @@ jobs:
           export LATEST_APP=v0.18.2
           git clone https://github.com/usememos/memos.git
           cd memos/web && git checkout $LATEST_APP
-          pnpm install && pnpm build
+          pnpm && pnpm build
           cd ..
           rm -rf ./server/dist && cp -r web/dist ./server/
           go build -o memos-freebsd
