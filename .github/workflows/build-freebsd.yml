@@ -25,6 +25,7 @@ jobs:
         prepare: |
           pkg install -y node wget curl git go121 gcc bash gawk gsed
           ln -s /usr/local/bin/go121 /usr/local/bin/go
+          cd /usr/ports/www/node && make install
         run: |
           export LATEST_APP=v0.18.2
           git clone https://github.com/usememos/memos.git
