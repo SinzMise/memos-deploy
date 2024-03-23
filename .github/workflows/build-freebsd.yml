@@ -27,7 +27,7 @@ jobs:
           ln -s /usr/local/bin/go121 /usr/local/bin/go
         run: |
           export LATEST_APP=v0.18.2
-          git clone -b $LATEST_APP https://github.com/alist-org/alist
+          git clone -b $LATEST_APP https://github.com/usememos/memos
           cd memos/web
           npm install -g pnpm
           pnpm install
