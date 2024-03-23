@@ -37,7 +37,7 @@ jobs:
       with:
         name: Memos-FreeBSD
         path: |
-            memos/memos-freebsd
+            memosfreebsd/memos-freebsd
 
     - name: Generate release tag
       id: tag
@@ -50,7 +50,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         files: |
-              memos/memos-freebsd
+              memosfreebsd/memos-freebsd
               
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
