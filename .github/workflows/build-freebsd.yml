@@ -31,26 +31,18 @@ jobs:
           cd memosfreebsd/
           go build -o memosfreebsd ./bin/memos/main.go
           cd ..
-          
-    - name: Upload artifact
-      uses: actions/upload-artifact@main
-      with:
-        name: Memos-FreeBSD
-        path: |
-            memosfreebsd/memosfreebsd
 
-    - name: Generate release tag
-      id: tag
-      run: echo "release_tag=v0.18.2" >> $GITHUB_OUTPUT
-
-    - name: Create release
+    - name: Create Release and Upload Release Asset
       uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
+        name: Release ${{ steps.tag.outputs.release_tag }}
+        body: TODO New Release.
+        draft: false
+        prerelease: false
         files: |
-              memosfreebsd/memosfreebsd
+           memosfreebsd/memosfreebsd
               
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
