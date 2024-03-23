@@ -27,8 +27,11 @@ jobs:
           ln -s /usr/local/bin/go121 /usr/local/bin/go
         run: |
           export LATEST_APP=v0.18.2
-          git clone https://github.com/usememos/memos.git
-          cd memos && git checkout $LATEST_APP
+          git clone -b $LATEST_APP https://github.com/alist-org/alist
+          cd memos/web
+          npm install -g pnpm
+          pnpm install
+          pnpm build
           go build -o memos-freebsd
           cd ..
           
