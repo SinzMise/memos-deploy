@@ -29,7 +29,7 @@ jobs:
           export LATEST_APP=v0.18.2
           git clone -b $LATEST_APP https://github.com/usememos/memos.git memos
           cd memos
-          go build -o memos-freebsd ./bin/server/main.go
+          go build -o memosfreebsd ./bin/server/main.go
           cd ..
           
     - name: Upload artifact
@@ -37,7 +37,7 @@ jobs:
       with:
         name: Memos-FreeBSD
         path: |
-            memos/memos-freebsd
+            memos/memosfreebsd
 
     - name: Generate release tag
       id: tag
@@ -50,7 +50,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         files: |
-              memos/memos-freebsd
+              memos/memosfreebsd
               
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
