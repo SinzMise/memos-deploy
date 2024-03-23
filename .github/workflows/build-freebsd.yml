@@ -23,12 +23,13 @@ jobs:
         usesh: true
         release: 13.2
         prepare: |
-          pkg install -y node npm pnpm wget curl git go121 gcc bash gawk gsed
+          pkg install -y node npm wget curl git go121 gcc bash gawk gsed
           ln -s /usr/local/bin/go121 /usr/local/bin/go
         run: |
           export LATEST_APP=v0.18.2
           git clone https://github.com/usememos/memos.git
           cd memos/web && git checkout $LATEST_APP
+          npm install -g pnpm
           pnpm && pnpm build
           cd ..
           rm -rf ./server/dist && cp -r web/dist ./server/
