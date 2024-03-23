@@ -29,9 +29,10 @@ jobs:
           export LATEST_APP=v0.18.2
           git clone -b $LATEST_APP https://github.com/usememos/memos
           cd memos/web
-          npm install -g pnpm
+          npm install -g pnpm@8.7.0
           pnpm install
           pnpm build
+          cd ..
           go build -o memos-freebsd
           cd ..
           
