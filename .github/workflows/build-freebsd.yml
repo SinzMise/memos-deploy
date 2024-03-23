@@ -25,12 +25,11 @@ jobs:
         prepare: |
           pkg install -y node wget curl git go121 gcc bash gawk gsed
           ln -s /usr/local/bin/go121 /usr/local/bin/go
-          cd /usr/ports/www/node && make install
         run: |
           export LATEST_APP=v0.18.2
           git clone https://github.com/usememos/memos.git
           cd memos/web && git checkout $LATEST_APP
-          npm install pnpm -g
+          npm install pnpm
           pnpm && pnpm build
           cd ..
           rm -rf ./server/dist && cp -r web/dist ./server/
