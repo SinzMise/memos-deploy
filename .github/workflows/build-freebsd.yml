@@ -29,23 +29,28 @@ jobs:
           export LATEST_APP=v0.18.2
           git clone --branch $LATEST_APP https://github.com/usememos/memos.git memosfreebsd
           cd memosfreebsd/
-          go build -o memosfreebsd ./bin/memos/main.go
+          go build -o memos-freebsd ./bin/memos/main.go
           cd ..
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@main
+      with:
+        name: Memos-FreeBSD
+        path: |
+            memos/memos-freebsd
 
     - name: Generate release tag
       id: tag
       run: echo "release_tag=v0.18.2" >> $GITHUB_OUTPUT
 
-    - name: Create Release and Upload Release Asset
+    - name: Create release
       uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        name: Release ${{ steps.tag.outputs.release_tag }}
-        body: TODO New Release.
-        draft: false
-        prerelease: false
         files: |
-           memosfreebsd/memosfreebsd
+              memos/memos-freebsd
               
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
