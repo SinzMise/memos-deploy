@@ -29,9 +29,9 @@ jobs:
           export LATEST_APP=v0.18.2
           git clone https://github.com/usememos/memos.git
           cd memos && git checkout $LATEST_APP
-          npm install -g yarn
+          npm install -g pnpm
           cd web
-          yarn && yarn build
+          pnpm install && pnpm build
           cd ..
           rm -rf ./server/dist && cp -r web/dist ./server/
           go build -o memos-freebsd
