@@ -23,19 +23,13 @@ jobs:
       with:
         node-version: 16.x
 
-    - uses: pnpm/action-setup@v2
-      name: Install pnpm
-      with:
-        version: 8
-        run_install: false
-
     - name: Make Memos-Web
       run: |
           export LATEST_APP=v0.18.2
           git clone --branch $LATEST_APP https://github.com/usememos/memos.git memosfreebsd
           cd memosfreebsd/web
-          pnpm install --no-frozen-lockfile
-          pnpm build
+          npm install -g yarn
+          yarn && yarn build
           cd ..
     
     - name: Build Memos-FreeBSD
