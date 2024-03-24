@@ -29,7 +29,7 @@ jobs:
           git clone --branch $LATEST_APP https://github.com/usememos/memos.git memosfreebsd
           cd memosfreebsd/web
           npm install
-          npm run postinstall
+          npm run type-gen
           npm run build
           cd ..
     
