@@ -34,7 +34,7 @@ jobs:
           export LATEST_APP=v0.18.2
           git clone --branch $LATEST_APP https://github.com/usememos/memos.git memosfreebsd
           cd memosfreebsd/web
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
           cd ..
     
