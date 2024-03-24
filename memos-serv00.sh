@@ -9,12 +9,14 @@ curl -L $DOWNLOAD_URL -o memos
 chmod +x memos
 
 if [ -f "./data/config.json" ]; then
-    echo "Alist-FreeBSD最新版本已经下载覆盖完成！"
+    echo "Memos-FreeBSD最新版本已经下载覆盖完成！"
 else
     mkdir ./db
     mkdir ./db/.thumbnail_cache
     nohup ./memos --data ./db --mode prod > /dev/null 2>&1 &
     clear
-    echo "已生成配置文件，请修改端口！"
+    echo "Memos-FreeBSD最新版本已经安装完成！"
+    echo 
+    echo "运行./memos --data ./db --mode prod --port （放行的端口）即可使用Memos"
     echo
 fi
