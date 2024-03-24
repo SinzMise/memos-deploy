@@ -32,7 +32,7 @@ jobs:
           npm run type-gen
           npm run build
           cd ..
-          mkdir ./build/ && cp -r web/dist ./build/
+          cp -r web/dist ./server/frontend/
           cd ..
     
     - name: Build Memos-FreeBSD
