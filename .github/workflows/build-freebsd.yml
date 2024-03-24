@@ -48,6 +48,7 @@ jobs:
         run: |
           cd memosfreebsd
           cp -r ./bin/memos/main.go ./
+          go mod tidy
           go build -o memos-freebsd ./main.go
           cd ..
 
