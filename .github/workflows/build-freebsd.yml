@@ -17,6 +17,26 @@ jobs:
     name: Build Memos-FreeBSD
     steps:
     - uses: actions/checkout@v4
+
+    - name: Set Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+
+    - name: Make Memos-Web
+      run: |
+          export LATEST_APP=v0.18.2
+          git clone --branch $LATEST_APP https://github.com/usememos/memos.git memosfreebsd
+          cd memosfreebsd/web
+          npm install
+          npm run type-gen
+          npm run build
+          cd ..
+          cp -r ./web/dist/ ./server/
+          cd ./server/
+          ls
+          cd ..
+    
     - name: Build Memos-FreeBSD
       uses: vmactions/freebsd-vm@v1
       with:
@@ -26,15 +46,7 @@ jobs:
           pkg install -y node npm wget curl git go121 gcc bash gawk gsed
           ln -s /usr/local/bin/go121 /usr/local/bin/go
         run: |
-          export LATEST_APP=v0.18.2
-          git clone --branch $LATEST_APP https://github.com/usememos/memos.git memosfreebsd
-          cd memosfreebsd/web
-          npm install
-          npm run type-gen
-          npm run build
-          cd ..
-          cp -r web/dist/ ./server/
-          ls
+          cd memosfreebsd
           go build -o memos-freebsd ./bin/memos/main.go
           cd ..
 
