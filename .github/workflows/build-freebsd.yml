@@ -1,64 +1,62 @@
-name: Build Memos-FreeBSD
+name: Build
 
-on:
-  workflow_call:
-    inputs:
-      version:
-        required: true
-        type: string
-      dry_run:
-        required: true
-        type: boolean
-  workflow_dispatch:
+on: workflow_dispatch
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    name: Build Memos-FreeBSD
+    name: Build
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set Node.js 18.x
-      uses: actions/setup-node@v3
+    - name: Set up Go
+      uses: actions/setup-go@v4
       with:
-        node-version: 18.x
+        go-version: 'stable'
+        check-latest: true
 
-    - name: Make Memos-Web
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Clone Repo
       run: |
-          export LATEST_APP=v0.18.2
-          git clone --branch $LATEST_APP https://github.com/usememos/memos.git memos
-          cd memos/web
-          npm install -g pnpm
-          pnpm i --frozen-lockfile
-          pnpm type-gen
-          pnpm build
-          cd ..
-          mv -f "./web/dist" "./server/"
-    
-    - name: Build Memos-FreeBSD
-      uses: vmactions/freebsd-vm@v1
-      with:
-        usesh: true
-        release: 13.2
-        prepare: |
-          pkg install -y node npm wget curl git go121 gcc bash gawk gsed
-          ln -s /usr/local/bin/go121 /usr/local/bin/go
-        run: |
-          cd memos
-          go mod tidy
-          go build -o memos-freebsd ./bin/memos/main.go
-          cd ..
+        export LATEST_APP=$(wget -qO- https://api.github.com/repos/usememos/memos/tags | gawk -F '["v]' '/name/{print "v"$5;exit}')
+        git clone -b $LATEST_APP https://github.com/usememos/memos
+        npm install -g pnpm
 
+    - name: Build Frontend
+      run: |
+        cd memos/web
+        corepack enable && pnpm i --frozen-lockfile
+        pnpm build
+        mkdir -p ../artifact
+        mv -f dist ../artifact/dist
+        cd ../..
+
+    - name: Build binary
+      run: |
+        cd memos
+        GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o memos ./bin/memos/main.go && rm -f artifact/memos && cp memos artifact/memos && cd artifact && tar -czvf ../memos-linux-amd64.tar.gz * && cd ..
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o memos ./bin/memos/main.go && rm -f artifact/memos && cp memos artifact/memos && cd artifact && tar -czvf ../memos-windows-amd64.tar.gz * && cd ..
+        GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o memos ./bin/memos/main.go && rm -f artifact/memos && cp memos artifact/memos && cd artifact && tar -czvf ../memos-darwin-amd64.tar.gz * && cd ..
+        GOOS=freebsd GOARCH=amd64 CGO_ENABLED=0 go build -o memos ./bin/memos/main.go && rm -f artifact/memos && cp memos artifact/memos && cd artifact && tar -czvf ../memos-freebsd-amd64.tar.gz * && cd ..
+        cd ..
+        
     - name: Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: Memos-FreeBSD
+        name: memos-pre-built
         path: |
-            memos/memos-freebsd
-
+            memos/memos-linux-amd64.tar.gz
+            memos/memos-windows-amd64.tar.gz
+            memos/memos-darwin-amd64.tar.gz
+            memos/memos-freebsd-amd64.tar.gz
+            
     - name: Generate release tag
       id: tag
-      run: echo "release_tag=v0.18.2" >> $GITHUB_OUTPUT
+      run: echo "release_tag=$(wget -qO- https://api.github.com/repos/usememos/memos/tags | gawk -F '["v]' '/name/{print "v"$5;exit}')" >> $GITHUB_OUTPUT
 
     - name: Create release
       uses: softprops/action-gh-release@v1
@@ -67,12 +65,15 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         files: |
-              memos/memos-freebsd
+            memos/memos-linux-amd64.tar.gz
+            memos/memos-windows-amd64.tar.gz
+            memos/memos-darwin-amd64.tar.gz
+            memos/memos-freebsd-amd64.tar.gz
               
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        repository: 'SinzMise/memos-deploy'
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
         retain_days: 1
         keep_minimum_runs: 8
