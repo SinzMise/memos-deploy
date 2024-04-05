@@ -30,6 +30,7 @@ jobs:
       run: |
         cd memos/web
         corepack enable && pnpm i --frozen-lockfile
+        pnpm type-gen
         pnpm build
         mkdir -p ../artifact
         mv -f dist ../artifact/dist
