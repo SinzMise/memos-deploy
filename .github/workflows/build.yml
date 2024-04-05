@@ -22,9 +22,9 @@ jobs:
 
     - name: Clone Repo
       run: |
-        export LATEST_APP=v0.18.0
+        export LATEST_APP=v0.18.1
         git clone -b $LATEST_APP https://github.com/usememos/memos
-        npm install -g pnpm@8.7.0
+        npm install -g pnpm
 
     - name: Build Frontend
       run: |
@@ -57,7 +57,7 @@ jobs:
             
     - name: Generate release tag
       id: tag
-      run: echo "release_tag=v0.18.0" >> $GITHUB_OUTPUT
+      run: echo "release_tag=v0.18.1" >> $GITHUB_OUTPUT
 
     - name: Create release
       uses: softprops/action-gh-release@v1
