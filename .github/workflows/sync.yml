@@ -30,7 +30,7 @@ jobs:
               await github.rest.actions.createWorkflowDispatch({
               owner: 'SinzMise',
               repo: 'memos-deploy',
-              workflow_id: 'build-freebsd.yml',
+              workflow_id: 'build.yml',
               ref: 'main'
               })
               
