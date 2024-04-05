@@ -1,13 +1,6 @@
 #!/bin/sh
-
-API_URL="https://api.github.com/repos/SinzMise/memos-deploy/releases/latest"
-
-DOWNLOAD_URL=$(curl -s $API_URL | jq -r ".assets[] | select(.name | contains(\"memos-freebsd\")) | .browser_download_url")
-
-curl -L $DOWNLOAD_URL -o memos
-
-chmod +x memos
-
+curl -L https://github.com/SinzMise/memos-deploy/releases/download/v0.18.2/memos-freebsd-amd64.tar.gz -o memos-freebsd-amd64.tar.gz
+tar -xzvf memos-freebsd-amd64.tar.gz && rm memos-freebsd-amd64.tar.gz && chmod +x memos
 if [ -f "./data/config.json" ]; then
     echo "Memos-FreeBSD最新版本已经下载覆盖完成！"
 else
