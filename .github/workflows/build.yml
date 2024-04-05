@@ -22,7 +22,7 @@ jobs:
 
     - name: Clone Repo
       run: |
-        export LATEST_APP=v0.19.1
+        export LATEST_APP=v0.20.0
         git clone -b $LATEST_APP https://github.com/usememos/memos
         npm install -g pnpm
 
@@ -57,7 +57,7 @@ jobs:
             
     - name: Generate release tag
       id: tag
-      run: echo "release_tag=v0.19.1" >> $GITHUB_OUTPUT
+      run: echo "release_tag=v0.20.0" >> $GITHUB_OUTPUT
 
     - name: Create release
       uses: softprops/action-gh-release@v1
