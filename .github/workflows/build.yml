@@ -22,7 +22,7 @@ jobs:
 
     - name: Clone Repo
       run: |
-        export LATEST_APP=v0.20.0
+        export LATEST_APP=$(wget -qO- https://api.github.com/repos/usememos/memos/tags | gawk -F '["v]' '/name/{print "v"$5;exit}')
         git clone -b $LATEST_APP https://github.com/usememos/memos
         npm install -g pnpm
 
@@ -30,7 +30,6 @@ jobs:
       run: |
         cd memos/web
         corepack enable && pnpm i --frozen-lockfile
-        pnpm type-gen
         pnpm build
         mkdir -p ../artifact
         mv -f dist ../artifact/dist
@@ -57,7 +56,7 @@ jobs:
             
     - name: Generate release tag
       id: tag
-      run: echo "release_tag=v0.20.0" >> $GITHUB_OUTPUT
+      run: echo "release_tag=$(wget -qO- https://api.github.com/repos/usememos/memos/tags | gawk -F '["v]' '/name/{print "v"$5;exit}')" >> $GITHUB_OUTPUT
 
     - name: Create release
       uses: softprops/action-gh-release@v1
