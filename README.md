@@ -21,4 +21,5 @@ mkdir -p ~/domains/memos && cd ~/domains/memos
 ```
 wget -O memos-freebsd.sh https://raw.githubusercontent.com/SinzMise/memos-deploy/main/memos-serv00.sh && sh memos-serv00.sh
 ```
-然后运行./memos --data ./db --mode prod --port （在Serv00放行的端口）即可使用
+然后运行./memos --data ./db --mode prod --port 在Serv00放行的端口  
+即可使用
