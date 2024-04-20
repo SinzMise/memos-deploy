@@ -8,7 +8,7 @@ mkdir -p ~/domains/memos && cd ~/domains/memos
 ```
 接着使用一键命令安装Memos：
 ```
-wget -O memos-freebsd.sh https://raw.githubusercontent.com/SinzMise/memos-deploy/main/memos-serv00-0182.sh && sh memos-serv00-0182.sh
+wget -O memos-freebsd.sh https://raw.githubusercontent.com/SinzMise/memos-deploy/main/memos-serv00-0182.sh && sh memos-freebsd.sh
 ```
 然后运行./memos --data ./db --mode prod --port （在Serv00放行的端口）即可使用
 
